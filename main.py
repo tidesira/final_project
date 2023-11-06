@@ -177,3 +177,5 @@ model = MarketModel(initial_buyers, initial_sellers)
 # Run the Tkinter main loop
 running = False
 root.mainloop()
+
+# very fun yay
