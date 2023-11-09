@@ -15,7 +15,7 @@ initial_buyers = 100
 initial_sellers = 100
 max_price = 100
 min_price = 10
-external_shock_probability = 0.01  # Reduced the probability of external shocks
+external_shock_probability = 0.1
 
 # Lists to store data for plotting
 prices = []
@@ -66,10 +66,11 @@ def initialize_model():
     model = MarketModel(initial_buyers, initial_sellers)
 
 def update_plot():
-    line.set_data(range(len(prices)), prices)
-    ax.relim()
-    ax.autoscale_view()
-    canvas.draw()
+    line.set_data(range(len(prices)), prices)  # Update the plot's data
+    ax.relim()  # Recompute the data limits
+    ax.autoscale_view()  # Automatically adjust the plot's view
+    canvas.draw()  # Redraw the canvas
+
 
 def step_simulation():
     global simulated_time
@@ -89,15 +90,27 @@ def step_simulation():
     if running:  # Schedule the next step only if the simulation is running
         root.after(500, step_simulation)
 
+
 def update_buyers_and_sellers():
-    global initial_buyers, initial_sellers
-    new_buyer_count = int(num_buyers_entry.get())
-    new_seller_count = int(num_sellers_entry.get())
-    initial_buyers = new_buyer_count
-    initial_sellers = new_seller_count
-    initialize_model()  # Reset the model with the new counts
-    update_labels()
-    update_plot()
+    try:
+        new_buyer_count = int(num_buyers_entry.get())
+        new_seller_count = int(num_sellers_entry.get())
+        if new_buyer_count >= 0 and new_seller_count >= 0:
+            global initial_buyers, initial_sellers
+            initial_buyers = new_buyer_count
+            initial_sellers = new_seller_count
+            initialize_model()  # Reset the model with the new counts
+            update_labels()
+            update_plot()
+            error_label.config(text="")  # Clear any previous error message
+        else:
+            # Display an error message in the GUI if input is invalid
+            error_label.config(text="Please enter non-negative integer values for buyers and sellers.")
+    except ValueError:
+        # Display an error message in the GUI if input cannot be converted to integers
+        error_label.config(text="Invalid input. Please enter integer values for buyers and sellers.")
+
+           
 
 def run_simulation():
     global running
@@ -123,9 +136,14 @@ def update_labels():
     sellers_label.config(text="Sellers: " + str(num_sellers))
     root.update()
 
+
 # Initialize the Tkinter GUI
 root = tk.Tk()
 root.title("Market Simulation")
+
+error_label = tk.Label(root, text="", fg="red")  # Create an error label with red text
+error_label.pack()
+
 
 buyers_label = tk.Label(root, text="Buyers: ")
 sellers_label = tk.Label(root, text="Sellers: ")
@@ -178,4 +196,4 @@ model = MarketModel(initial_buyers, initial_sellers)
 running = False
 root.mainloop()
 
-# very fun yay
+
