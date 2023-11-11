@@ -110,6 +110,25 @@ def update_buyers_and_sellers():
         # Display an error message in the GUI if input cannot be converted to integers
         error_label.config(text="Invalid input. Please enter integer values for buyers and sellers.")
 
+def update_parameters():
+    try:
+        new_external_shock_prob = float(external_shock_entry.get())
+        new_min_price = float(min_price_entry.get())
+        new_max_price = float(max_price_entry.get())
+
+        if 0 <= new_external_shock_prob <= 1 and new_min_price < new_max_price:
+            global external_shock_probability, min_price, max_price
+            external_shock_probability = new_external_shock_prob
+            min_price = new_min_price
+            max_price = new_max_price
+            error_label.config(text="")
+        else:
+            # Display an error message in the GUI if input is invalid
+            error_label.config(text="Invalid input. Please check parameter values.")
+    except ValueError:
+        # Display an error message in the GUI if input cannot be converted to floats
+        error_label.config(text="Invalid input. Please enter valid numerical values for parameters.")
+
            
 
 def run_simulation():
@@ -177,6 +196,29 @@ num_sellers_entry.pack()
 
 update_button = tk.Button(root, text="Update Buyers and Sellers", command=update_buyers_and_sellers)
 update_button.pack()
+
+# Create input fields for additional parameters
+external_shock_label = tk.Label(root, text="Enter external shock probability (0 to 1):")
+external_shock_label.pack()
+external_shock_entry = tk.Entry(root)
+external_shock_entry.insert(0, str(external_shock_probability))
+external_shock_entry.pack()
+
+min_price_label = tk.Label(root, text="Enter min price:")
+min_price_label.pack()
+min_price_entry = tk.Entry(root)
+min_price_entry.insert(0, str(min_price))
+min_price_entry.pack()
+
+max_price_label = tk.Label(root, text="Enter max price:")
+max_price_label.pack()
+max_price_entry = tk.Entry(root)
+max_price_entry.insert(0, str(max_price))
+max_price_entry.pack()
+
+# Button to update all parameters
+update_parameters_button = tk.Button(root, text="Update Parameters", command=update_parameters)
+update_parameters_button.pack()
 
 # Create a Matplotlib figure for the price plot
 fig, ax = plt.subplots()
