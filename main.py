@@ -163,11 +163,11 @@ root.title("Market Simulation")
 error_label = tk.Label(root, text="", fg="red")  # Create an error label with red text
 error_label.pack()
 
-
 buyers_label = tk.Label(root, text="Buyers: ")
 sellers_label = tk.Label(root, text="Sellers: ")
 buyers_label.pack()
 sellers_label.pack()
+
 
 step_button = tk.Button(root, text="Step", command=step_simulation)
 step_button.pack()
@@ -181,44 +181,55 @@ stop_button.pack()
 current_price_label = tk.Label(root, text="Current Price: $10")
 current_price_label.pack()
 
-# Create input fields for the number of buyers and sellers
-num_buyers_label = tk.Label(root, text="Enter number of buyers:")
-num_buyers_label.pack()
-num_buyers_entry = tk.Entry(root)
-num_buyers_entry.insert(0, str(initial_buyers))
-num_buyers_entry.pack()
-
-num_sellers_label = tk.Label(root, text="Enter number of sellers:")
-num_sellers_label.pack()
-num_sellers_entry = tk.Entry(root)
-num_sellers_entry.insert(0, str(initial_sellers))
-num_sellers_entry.pack()
-
-update_button = tk.Button(root, text="Update Buyers and Sellers", command=update_buyers_and_sellers)
-update_button.pack()
+# Left Frame for Buyers and Sellers
+left_frame = tk.Frame(root)
+left_frame.pack(side=tk.LEFT, padx=10)
 
 # Create input fields for additional parameters
-external_shock_label = tk.Label(root, text="Enter external shock probability (0 to 1):")
+external_shock_label = tk.Label(left_frame, text="Enter external shock probability (0 to 1):")
 external_shock_label.pack()
-external_shock_entry = tk.Entry(root)
+external_shock_entry = tk.Entry(left_frame)
 external_shock_entry.insert(0, str(external_shock_probability))
 external_shock_entry.pack()
 
-min_price_label = tk.Label(root, text="Enter min price:")
+min_price_label = tk.Label(left_frame, text="Enter min price:")
 min_price_label.pack()
-min_price_entry = tk.Entry(root)
+min_price_entry = tk.Entry(left_frame)
 min_price_entry.insert(0, str(min_price))
 min_price_entry.pack()
 
-max_price_label = tk.Label(root, text="Enter max price:")
+max_price_label = tk.Label(left_frame, text="Enter max price:")
 max_price_label.pack()
-max_price_entry = tk.Entry(root)
+max_price_entry = tk.Entry(left_frame)
 max_price_entry.insert(0, str(max_price))
 max_price_entry.pack()
 
 # Button to update all parameters
-update_parameters_button = tk.Button(root, text="Update Parameters", command=update_parameters)
+update_parameters_button = tk.Button(left_frame, text="Update Parameters", command=update_parameters)
 update_parameters_button.pack()
+
+
+# Right Frame for Additional Parameters
+right_frame = tk.Frame(root)
+right_frame.pack(side=tk.RIGHT, padx=10)
+
+# Create input fields for the number of buyers and sellers
+num_buyers_label = tk.Label(right_frame, text="Enter number of buyers:")
+num_buyers_label.pack()
+num_buyers_entry = tk.Entry(right_frame)
+num_buyers_entry.insert(0, str(initial_buyers))
+num_buyers_entry.pack()
+
+num_sellers_label = tk.Label(right_frame, text="Enter number of sellers:")
+num_sellers_label.pack()
+num_sellers_entry = tk.Entry(right_frame)
+num_sellers_entry.insert(0, str(initial_sellers))
+num_sellers_entry.pack()
+
+update_button = tk.Button(right_frame, text="Update Buyers and Sellers", command=update_buyers_and_sellers)
+update_button.pack()
+
+
 
 # Create a Matplotlib figure for the price plot
 fig, ax = plt.subplots()
