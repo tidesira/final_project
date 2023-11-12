@@ -68,7 +68,7 @@ def initialize_model():
 def update_plot():
     line.set_data(range(len(prices)), prices)  # Update the plot's data
     ax.relim()  # Recompute the data limits
-    ax.autoscale_view()  # Automatically adjust the plot's view
+    ax.autoscale_view()  # Automatically adjust the plot's view    
     canvas.draw()  # Redraw the canvas
 
 
@@ -178,7 +178,7 @@ run_button.pack()
 stop_button = tk.Button(root, text="Stop", command=stop_simulation, state=tk.DISABLED)
 stop_button.pack()
 
-current_price_label = tk.Label(root, text="Current Price: $10")
+current_price_label = tk.Label(root, text="Current Price: $0")
 current_price_label.pack()
 
 # Left Frame for Buyers and Sellers
@@ -236,6 +236,7 @@ fig, ax = plt.subplots()
 ax.set_xlabel("Time Steps")
 ax.set_ylabel("Price")
 line, = ax.plot(prices, label="Price")
+
 
 # Create a canvas for the Matplotlib figure
 canvas = FigureCanvasTkAgg(fig, master=root)
