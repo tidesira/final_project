@@ -50,6 +50,9 @@ class MarketModel:
         self.buyers = [Buyer(random.uniform(100, 200), random.uniform(1, 5)) for _ in range(n_buyers)]
         self.sellers = [Seller(random.uniform(100, 200)) for _ in range(n_sellers)]
 
+        for seller in self.sellers:
+            seller.price = max(min(seller.price, max_price), min_price)
+
     def external_shock(self):
         if random.random() < external_shock_probability:
             for seller in self.sellers:
@@ -69,6 +72,10 @@ def update_plot():
     line.set_data(range(len(prices)), prices)  # Update the plot's data
     ax.relim()  # Recompute the data limits
     ax.autoscale_view()  # Automatically adjust the plot's view    
+    if prices:
+        ax.set_ylim(min(min_price, min(prices)), max(max_price, max(prices)))  # Set y-axis limits to the max price range
+    else:
+        ax.set_ylim(min_price, max_price)  # Set y-axis limits to the default price range
     canvas.draw()  # Redraw the canvas
 
 
@@ -76,6 +83,12 @@ def step_simulation():
     global simulated_time
     buyer = random.choice(model.buyers)
     seller = random.choice(model.sellers)
+    # Generate a candidate price within the current specified range
+    candidate_price = random.uniform(min_price, max_price)
+
+    # Ensure the candidate price is within the range, adjusting if necessary
+    seller.price = max(min(candidate_price, max_price), min_price)
+
     buyer.buy(seller)
     simulated_time += time_step_duration  # Update simulated time
     if simulated_time % 10 == 0:  # Simulate an external shock every 10 hours
@@ -110,12 +123,12 @@ def update_buyers_and_sellers():
         # Display an error message in the GUI if input cannot be converted to integers
         error_label.config(text="Invalid input. Please enter integer values for buyers and sellers.")
 
+
 def update_parameters():
     try:
         new_external_shock_prob = float(external_shock_entry.get())
         new_min_price = float(min_price_entry.get())
         new_max_price = float(max_price_entry.get())
-
         if 0 <= new_external_shock_prob <= 1 and new_min_price < new_max_price:
             global external_shock_probability, min_price, max_price
             external_shock_probability = new_external_shock_prob
@@ -127,9 +140,8 @@ def update_parameters():
             error_label.config(text="Invalid input. Please check parameter values.")
     except ValueError:
         # Display an error message in the GUI if input cannot be converted to floats
-        error_label.config(text="Invalid input. Please enter valid numerical values for parameters.")
+        error_label.config(text="Invalid input. Please enter valid numerical values for parameters.")       
 
-           
 
 def run_simulation():
     global running
@@ -154,6 +166,7 @@ def update_labels():
     buyers_label.config(text="Buyers: " + str(num_buyers))
     sellers_label.config(text="Sellers: " + str(num_sellers))
     root.update()
+
 
 
 # Initialize the Tkinter GUI
@@ -203,6 +216,7 @@ max_price_label.pack()
 max_price_entry = tk.Entry(left_frame)
 max_price_entry.insert(0, str(max_price))
 max_price_entry.pack()
+
 
 # Button to update all parameters
 update_parameters_button = tk.Button(left_frame, text="Update Parameters", command=update_parameters)
